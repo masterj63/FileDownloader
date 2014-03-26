@@ -1,5 +1,6 @@
 package mdev.master_j.filedownloader;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -15,7 +16,9 @@ public class DowloaderActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			FragmentManager fragmentManager = getFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.add(R.id.layout_activity_main, new DownloaderFragment());
+			Fragment fragment = new DownloaderFragment();
+			fragment.setRetainInstance(true);
+			fragmentTransaction.add(R.id.layout_activity_main, fragment);
 			fragmentTransaction.commit();
 		}
 	}
