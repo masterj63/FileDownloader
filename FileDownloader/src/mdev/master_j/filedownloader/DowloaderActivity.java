@@ -1,4 +1,4 @@
-package mdev.master_j.filedownloader;
+ package mdev.master_j.filedownloader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
