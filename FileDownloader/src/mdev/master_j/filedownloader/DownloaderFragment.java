@@ -3,7 +3,10 @@ package mdev.master_j.filedownloader;
 import java.io.File;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -85,6 +88,16 @@ public class DownloaderFragment extends Fragment {
 	private class PictureDownloaderAsyncTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
+			ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo netInfo = connMgr.getActiveNetworkInfo();
+			if (netInfo == null || netInfo.isConnected()) {
+				Log.d("mj_tag", "No internet connection");
+				downloading = false;
+				downloaded = false;
+				updUI();
+				return null;
+			}
+
 			downloading = true;
 			downloaded = false;
 			updUI();
