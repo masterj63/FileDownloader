@@ -89,6 +89,7 @@ public class DownloaderFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+
 			downloading = false;
 			downloaded = true;
 			updUI();
