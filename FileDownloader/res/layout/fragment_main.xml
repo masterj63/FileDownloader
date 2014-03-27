@@ -28,7 +28,8 @@
         android:layout_alignBaseline="@+id/static_word_status"
         android:layout_alignBottom="@+id/static_word_status"
         android:layout_toRightOf="@+id/static_word_status"
-        android:text="TextView" />
+        android:text="TextView"
+        tools:ignore="HardcodedText" />
 
     <ProgressBar
         android:id="@+id/download_progressBar"
