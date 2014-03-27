@@ -21,9 +21,9 @@ public class DownloaderFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			if (!downloaded) {
-				// open
-			} else {
 				new PictureDownloaderAsyncTask().execute();
+			} else {
+				// show image
 			}
 			updUI();
 		}
@@ -44,9 +44,10 @@ public class DownloaderFragment extends Fragment {
 
 		actionButton = (Button) getActivity().findViewById(R.id.button_action);
 		actionButton.setOnClickListener(actionButtonClickListener);
-		actionButton.setText(R.string.button_action_download);
 
 		statusTextView = (TextView) getActivity().findViewById(R.id.status_textView);
+
+		updUI();
 	}
 
 	private void updUI() {
@@ -87,10 +88,10 @@ public class DownloaderFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 			downloading = false;
 			downloaded = true;
 			updUI();
-			super.onPostExecute(result);
 		}
 	}
 }
