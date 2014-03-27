@@ -29,6 +29,15 @@ public class DownloaderFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			if (!downloaded) {
+				ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+				NetworkInfo netInfo = connMgr.getActiveNetworkInfo();
+				if (netInfo == null || netInfo.isConnected()) {
+					Log.d("mj_tag", "No internet connection");
+					downloading = false;
+					downloaded = false;
+					updUI();
+					return;
+				}
 				new PictureDownloaderAsyncTask().execute();
 			} else {
 				// show image
@@ -88,16 +97,6 @@ public class DownloaderFragment extends Fragment {
 	private class PictureDownloaderAsyncTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo netInfo = connMgr.getActiveNetworkInfo();
-			if (netInfo == null || netInfo.isConnected()) {
-				Log.d("mj_tag", "No internet connection");
-				downloading = false;
-				downloaded = false;
-				updUI();
-				return null;
-			}
-
 			downloading = true;
 			downloaded = false;
 			updUI();
