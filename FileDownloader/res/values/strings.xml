@@ -16,4 +16,6 @@
     <string name="button_action_download">Download</string>
     <string name="button_action_open">Open</string>
     
+    <string name="url_picture">http://developer.android.com/design/media/new_widgets.png</string>
+    
 </resources>

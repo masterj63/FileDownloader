@@ -22,7 +22,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/status_textView"
+        android:id="@+id/status_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/static_word_status"

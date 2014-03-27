@@ -45,7 +45,7 @@ public class DownloaderFragment extends Fragment {
 		actionButton = (Button) getActivity().findViewById(R.id.button_action);
 		actionButton.setOnClickListener(actionButtonClickListener);
 
-		statusTextView = (TextView) getActivity().findViewById(R.id.status_textView);
+		statusTextView = (TextView) getActivity().findViewById(R.id.status_textview);
 
 		updUI();
 	}
