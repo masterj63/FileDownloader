@@ -1,12 +1,20 @@
 package mdev.master_j.filedownloader;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +62,42 @@ public class DownloaderFragment extends Fragment {
 		protected void onPostExecute(Bitmap result) {
 			super.onPostExecute(result);
 			ImageView img = (ImageView) getActivity().findViewById(R.id.imageView1);
-
+			if (result == null)
+				Toast.makeText(getActivity(), "null bitmap", Toast.LENGTH_SHORT).show();
+			else
+				img.setImageBitmap(result);
 		}
 	}
 
+	private Bitmap downloadBitmap(String picUrl) {
+		InputStream ins = null;
+
+		try {
+			URL url = new URL(picUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			// init
+			conn.setReadTimeout(15000);
+			conn.setConnectTimeout(5000);
+			conn.setRequestMethod("GET");
+			conn.setDoInput(true);
+			// start
+			conn.connect();
+			int response = conn.getResponseCode();
+			Log.d("DEBUG TAG>>", "The response is: " + response);
+			ins = conn.getInputStream();
+
+			Bitmap res = readIt(ins);
+			return res;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private Bitmap readIt(InputStream ins) {
+		Bitmap res = BitmapFactory.decodeStream(ins);
+		return res;
+	}
 }
