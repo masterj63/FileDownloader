@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class DownloaderFragment extends Fragment {
@@ -51,7 +53,8 @@ public class DownloaderFragment extends Fragment {
 		Log.d("mj>>>", "clicked");
 		// String url =
 		// "http://www.freedomwallpaper.com//nature-wallpaper-hd/6.jpg";
-		String url = "http://developer.android.com/images/home/kk-hero.jpg";
+		// String url = "http://developer.android.com/images/home/kk-hero.jpg";
+		String url = "http://developer.android.com/design/media/new_widgets.png";
 		ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = connMgr.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnected()) {
@@ -123,9 +126,27 @@ public class DownloaderFragment extends Fragment {
 			File picFile = new File(galDir.getAbsolutePath() + "/" + PICTURE_NAME);
 			Log.d("mj>>>", "streaming file to : " + picFile.getAbsolutePath() + " ;  exists : " + picFile.exists());
 			OutputStream ous = new FileOutputStream(picFile);
+			int loaded = 0, total = conn.getContentLength();
 			int t;
-			while ((t = ins.read()) != -1)
+			while ((t = ins.read()) != -1) {
+				loaded++;
 				ous.write(t);
+
+				Activity a = getActivity();
+				if (a == null)
+					continue;
+
+				View v = a.findViewById(R.id.download_progressBar);
+				if (v == null)
+					continue;
+
+				ProgressBar pb = (ProgressBar) v;
+				// if (pb == null)
+				// continue;
+
+				pb.setMax(total);
+				pb.setProgress(loaded);
+			}
 			ous.flush();
 			ous.close();
 			Log.d("mj>>>", "saved; ous closed.");
