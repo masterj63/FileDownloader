@@ -1,8 +1,13 @@
 package mdev.master_j.filedownloader;
 
+import java.io.File;
+
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +94,36 @@ public class DownloaderFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+
+			String albumName = getString(R.string.name_local_album);
+
+			File albumDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
+			if (!albumDirectory.canRead()) {
+				Log.d("mj_tag", "Can't read from " + albumDirectory.getAbsolutePath());
+				downloading = false;
+				downloaded = false;
+				updUI();
+				return;
+			}
+
+			String picureName = getString(R.string.name_local_picture);
+
+			File picFile = new File(albumDirectory.getAbsolutePath() + "/" + picureName);
+			if (!picFile.exists()) {
+				Log.d("mj_tag", "Can't find picture at " + picFile.getAbsolutePath());
+				downloading = false;
+				downloaded = false;
+				updUI();
+				return;
+			}
+
+			Uri uri = Uri.fromFile(picFile);
+
+			Intent intent = new Intent();
+			intent.setAction(Intent.ACTION_VIEW);
+			// intent.setDataAndType(uri, "image/jpg");
+			intent.setData(uri);
+			startActivity(intent);
 
 			downloading = false;
 			downloaded = true;
