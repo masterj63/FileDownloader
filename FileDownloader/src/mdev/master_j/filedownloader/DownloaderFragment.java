@@ -1,7 +1,16 @@
 package mdev.master_j.filedownloader;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class DownloaderFragment extends Fragment {
@@ -31,7 +41,7 @@ public class DownloaderFragment extends Fragment {
 			if (!downloaded) {
 				ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 				NetworkInfo netInfo = connMgr.getActiveNetworkInfo();
-				if (netInfo == null || netInfo.isConnected()) {
+				if (netInfo == null || !netInfo.isConnected()) {
 					Log.d("mj_tag", "No internet connection");
 					downloading = false;
 					downloaded = false;
@@ -97,6 +107,67 @@ public class DownloaderFragment extends Fragment {
 	private class PictureDownloaderAsyncTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
+			String pictureUrl = getString(R.string.url_picture);
+			try {
+				URL url = new URL(pictureUrl);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				// init
+				conn.setReadTimeout(15000);
+				conn.setConnectTimeout(5000);
+				conn.setRequestMethod("GET");
+				conn.setDoInput(true);
+				// start
+				conn.connect();
+				int response = conn.getResponseCode();
+				Log.d("mj_tag", "The response is: " + response);
+				// save
+				InputStream inStream = conn.getInputStream();
+
+				File albumDirectory = getAlbumDirectory();
+				if (!albumDirectory.mkdirs()) {
+					Log.d("mj_tag", "Cannot access " + albumDirectory.getAbsolutePath());
+					downloading = false;
+					downloaded = false;
+					updUI();
+					return null;
+				}
+				String pictureName = getString(R.string.name_local_picture);
+				File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + pictureName);
+				OutputStream outStream = new FileOutputStream(pictureFile);
+
+				int loaded = 0;
+				int total = conn.getContentLength();
+				int t;
+				while ((t = inStream.read()) != -1) {
+					loaded++;
+					outStream.write(t);
+
+					Activity a = getActivity();
+					if (a == null)
+						continue;
+
+					View v = a.findViewById(R.id.download_progressbar);
+					if (v == null)
+						continue;
+
+					ProgressBar pb = (ProgressBar) v;
+
+					pb.setMax(total);
+					pb.setProgress(loaded);
+				}
+				outStream.flush();
+				outStream.close();
+			} catch (MalformedURLException e) {
+				Log.d("mj_tag", "MalformedURLException", e);
+				e.printStackTrace();
+			} catch (ProtocolException e) {
+				Log.d("mj_tag", "ProtocolException", e);
+				e.printStackTrace();
+			} catch (IOException e) {
+				Log.d("mj_tag", "ProtocolException", e);
+				e.printStackTrace();
+			}
+
 			downloading = true;
 			downloaded = false;
 			updUI();
@@ -107,9 +178,7 @@ public class DownloaderFragment extends Fragment {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			String albumName = getString(R.string.name_local_album);
-
-			File albumDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
+			File albumDirectory = getAlbumDirectory();
 			if (!albumDirectory.canRead()) {
 				Log.d("mj_tag", "Can't read from " + albumDirectory.getAbsolutePath());
 				downloading = false;
@@ -120,16 +189,16 @@ public class DownloaderFragment extends Fragment {
 
 			String picureName = getString(R.string.name_local_picture);
 
-			File picFile = new File(albumDirectory.getAbsolutePath() + "/" + picureName);
-			if (!picFile.exists()) {
-				Log.d("mj_tag", "Can't find picture at " + picFile.getAbsolutePath());
+			File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + picureName);
+			if (!pictureFile.exists()) {
+				Log.d("mj_tag", "Can't find picture at " + pictureFile.getAbsolutePath());
 				downloading = false;
 				downloaded = false;
 				updUI();
 				return;
 			}
 
-			Uri uri = Uri.fromFile(picFile);
+			Uri uri = Uri.fromFile(pictureFile);
 
 			Intent intent = new Intent();
 			intent.setAction(Intent.ACTION_VIEW);
@@ -141,5 +210,10 @@ public class DownloaderFragment extends Fragment {
 			downloaded = true;
 			updUI();
 		}
+	}
+
+	private File getAlbumDirectory() {
+		String albumName = getString(R.string.name_local_album);
+		return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
 	}
 }

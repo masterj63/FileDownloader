@@ -7,8 +7,6 @@
     <string name="title_downloader_activity">Picure downloader</string>
     <string name="word_status">Status:</string>
 
-    <string name="url_picure">http://developer.android.com/design/media/new_widgets.png</string>
-    
     <string name="status_textview_idle">Idle</string>
     <string name="status_textview_loading">Downloading</string>
     <string name="status_textview_loaded">Downloaded</string>
