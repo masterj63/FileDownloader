@@ -49,6 +49,7 @@ public class DownloaderFragment extends Fragment {
 					return;
 				}
 				new PictureDownloaderAsyncTask().execute();
+				updUI();
 			} else {
 				// show image
 			}
@@ -124,11 +125,10 @@ public class DownloaderFragment extends Fragment {
 				InputStream inStream = conn.getInputStream();
 
 				File albumDirectory = getAlbumDirectory();
-				if (!albumDirectory.mkdirs()) {
+				if (!albumDirectory.mkdirs() && !albumDirectory.exists()) {
 					Log.d("mj_tag", "Cannot access " + albumDirectory.getAbsolutePath());
 					downloading = false;
 					downloaded = false;
-					updUI();
 					return null;
 				}
 				String pictureName = getString(R.string.name_local_picture);
@@ -170,7 +170,6 @@ public class DownloaderFragment extends Fragment {
 
 			downloading = true;
 			downloaded = false;
-			updUI();
 			return null;
 		}
 
@@ -202,8 +201,7 @@ public class DownloaderFragment extends Fragment {
 
 			Intent intent = new Intent();
 			intent.setAction(Intent.ACTION_VIEW);
-			// intent.setDataAndType(uri, "image/jpg");
-			intent.setData(uri);
+			intent.setDataAndType(uri, "image/*");
 			startActivity(intent);
 
 			downloading = false;
