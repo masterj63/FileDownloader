@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class DownloaderFragment extends Fragment {
+	private Handler handler = new Handler();
 	private Button actionButton;
 	private TextView statusTextView;
 	private boolean downloading;
@@ -131,6 +133,15 @@ public class DownloaderFragment extends Fragment {
 					downloaded = false;
 					return null;
 				}
+				downloading = true;
+				downloaded = false;
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						updUI();
+					}
+				});
+
 				String pictureName = getString(R.string.name_local_picture);
 				File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + pictureName);
 				OutputStream outStream = new FileOutputStream(pictureFile);
@@ -167,9 +178,6 @@ public class DownloaderFragment extends Fragment {
 				Log.d("mj_tag", "ProtocolException", e);
 				e.printStackTrace();
 			}
-
-			downloading = true;
-			downloaded = false;
 			return null;
 		}
 
