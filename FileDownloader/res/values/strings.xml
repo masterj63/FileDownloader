@@ -17,5 +17,7 @@
     <string name="button_action_open">Open</string>
     
     <string name="url_picture">http://developer.android.com/design/media/new_widgets.png</string>
+    <string name="name_local_album">MdevAlbum</string>
+    <string name="name_local_picture">mdev.png</string>
     
 </resources>
