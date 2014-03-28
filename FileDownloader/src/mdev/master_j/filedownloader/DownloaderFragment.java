@@ -52,9 +52,8 @@ public class DownloaderFragment extends Fragment {
 				}
 				new PictureDownloaderAsyncTask().execute();
 				updUI();
-			} else {
-				// show image
-			}
+			} else
+				showPicture();
 			updUI();
 		}
 	};
@@ -184,38 +183,39 @@ public class DownloaderFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-
-			File albumDirectory = getAlbumDirectory();
-			if (!albumDirectory.canRead()) {
-				Log.d("mj_tag", "Can't read from " + albumDirectory.getAbsolutePath());
-				downloading = false;
-				downloaded = false;
-				updUI();
-				return;
-			}
-
-			String picureName = getString(R.string.name_local_picture);
-
-			File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + picureName);
-			if (!pictureFile.exists()) {
-				Log.d("mj_tag", "Can't find picture at " + pictureFile.getAbsolutePath());
-				downloading = false;
-				downloaded = false;
-				updUI();
-				return;
-			}
-
-			Uri uri = Uri.fromFile(pictureFile);
-
-			Intent intent = new Intent();
-			intent.setAction(Intent.ACTION_VIEW);
-			intent.setDataAndType(uri, "image/*");
-			startActivity(intent);
-
 			downloading = false;
 			downloaded = true;
 			updUI();
 		}
+	}
+
+	private void showPicture() {
+		File albumDirectory = getAlbumDirectory();
+		if (!albumDirectory.canRead()) {
+			Log.d("mj_tag", "Can't read from " + albumDirectory.getAbsolutePath());
+			downloading = false;
+			downloaded = false;
+			updUI();
+			return;
+		}
+
+		String picureName = getString(R.string.name_local_picture);
+
+		File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + picureName);
+		if (!pictureFile.exists()) {
+			Log.d("mj_tag", "Can't find picture at " + pictureFile.getAbsolutePath());
+			downloading = false;
+			downloaded = false;
+			updUI();
+			return;
+		}
+
+		Uri uri = Uri.fromFile(pictureFile);
+
+		Intent intent = new Intent();
+		intent.setAction(Intent.ACTION_VIEW);
+		intent.setDataAndType(uri, "image/*");
+		startActivity(intent);
 	}
 
 	private File getAlbumDirectory() {
