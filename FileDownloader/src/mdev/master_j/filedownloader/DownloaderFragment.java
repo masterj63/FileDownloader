@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +34,7 @@ public class DownloaderFragment extends Fragment {
 	private Handler handler = new Handler();
 	private Button actionButton;
 	private TextView statusTextView;
+	private ProgressBar downloadProgressBar;
 	private boolean downloading;
 	private boolean downloaded;
 
@@ -73,6 +73,8 @@ public class DownloaderFragment extends Fragment {
 		actionButton.setOnClickListener(actionButtonClickListener);
 
 		statusTextView = (TextView) getActivity().findViewById(R.id.status_textview);
+
+		downloadProgressBar = (ProgressBar) getActivity().findViewById(R.id.download_progressbar);
 	}
 
 	@Override
@@ -154,18 +156,8 @@ public class DownloaderFragment extends Fragment {
 					loaded++;
 					outStream.write(t);
 
-					Activity a = getActivity();
-					if (a == null)
-						continue;
-
-					View v = a.findViewById(R.id.download_progressbar);
-					if (v == null)
-						continue;
-
-					ProgressBar pb = (ProgressBar) v;
-
-					pb.setMax(total);
-					pb.setProgress(loaded);
+					downloadProgressBar.setMax(total);
+					downloadProgressBar.setProgress(loaded);
 				}
 				outStream.flush();
 				outStream.close();
