@@ -88,18 +88,21 @@ public class DownloaderFragment extends Fragment {
 			statusTextView.setText(R.string.status_textview_idle);
 			actionButton.setText(R.string.button_action_download);
 			actionButton.setEnabled(true);
+			downloadProgressBar.setVisibility(View.INVISIBLE);
 			return;
 		}
 		if (downloading && !downloaded) {
 			statusTextView.setText(R.string.status_textview_loading);
 			actionButton.setText(R.string.button_action_download);
 			actionButton.setEnabled(false);
+			downloadProgressBar.setVisibility(View.VISIBLE);
 			return;
 		}
 		if (!downloading && downloaded) {
 			statusTextView.setText(R.string.status_textview_loaded);
 			actionButton.setText(R.string.button_action_open);
 			actionButton.setEnabled(true);
+			downloadProgressBar.setVisibility(View.INVISIBLE);
 			return;
 		}
 		if (downloading && downloaded) {
