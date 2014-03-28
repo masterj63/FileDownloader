@@ -48,11 +48,11 @@ public class DownloaderFragment extends Fragment {
 					Log.d("mj_tag", "No internet connection");
 					downloading = false;
 					downloaded = false;
-					updUI();
+					updateUI();
 					return;
 				}
 				new PictureDownloaderAsyncTask().execute();
-				updUI();
+				updateUI();
 			} else
 				showPicture();
 		}
@@ -78,10 +78,10 @@ public class DownloaderFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		Toast.makeText(getActivity(), "onResume()", Toast.LENGTH_SHORT).show();
-		updUI();
+		updateUI();
 	}
 
-	private void updUI() {
+	private void updateUI() {
 		if (!downloading && !downloaded) {
 			statusTextView.setText(R.string.status_textview_idle);
 			actionButton.setText(R.string.button_action_download);
@@ -139,7 +139,7 @@ public class DownloaderFragment extends Fragment {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
-						updUI();
+						updateUI();
 					}
 				});
 
@@ -187,7 +187,7 @@ public class DownloaderFragment extends Fragment {
 			super.onPostExecute(result);
 			downloading = false;
 			downloaded = true;
-			updUI();
+			updateUI();
 		}
 	}
 
@@ -197,7 +197,7 @@ public class DownloaderFragment extends Fragment {
 			Log.d("mj_tag", "Can't read from " + albumDirectory.getAbsolutePath());
 			downloading = false;
 			downloaded = false;
-			updUI();
+			updateUI();
 			return;
 		}
 
@@ -208,7 +208,7 @@ public class DownloaderFragment extends Fragment {
 			Log.d("mj_tag", "Can't find picture at " + pictureFile.getAbsolutePath());
 			downloading = false;
 			downloaded = false;
-			updUI();
+			updateUI();
 			return;
 		}
 
