@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DownloaderFragment extends Fragment {
 	private Handler handler = new Handler();
@@ -54,7 +55,6 @@ public class DownloaderFragment extends Fragment {
 				updUI();
 			} else
 				showPicture();
-			updUI();
 		}
 	};
 
@@ -68,14 +68,16 @@ public class DownloaderFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		downloading = false;
-		downloaded = false;
-
 		actionButton = (Button) getActivity().findViewById(R.id.button_action);
 		actionButton.setOnClickListener(actionButtonClickListener);
 
 		statusTextView = (TextView) getActivity().findViewById(R.id.status_textview);
+	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		Toast.makeText(getActivity(), "onResume()", Toast.LENGTH_SHORT).show();
 		updUI();
 	}
 
