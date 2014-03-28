@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DownloaderFragment extends Fragment {
 	private Handler handler = new Handler();
@@ -77,7 +76,6 @@ public class DownloaderFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		Toast.makeText(getActivity(), "onResume()", Toast.LENGTH_SHORT).show();
 		updateUI();
 	}
 
