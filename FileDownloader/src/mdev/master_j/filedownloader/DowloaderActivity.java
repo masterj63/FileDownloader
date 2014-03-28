@@ -1,12 +1,12 @@
 package mdev.master_j.filedownloader;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 
-public class DowloaderActivity extends ActionBarActivity {
+public class DowloaderActivity extends Activity {
 	private static final String TAG_DOWNLOADER_FRAGMENT = "mdev.master_j.filedownloader.DownloaderFragment";
 
 	@Override
