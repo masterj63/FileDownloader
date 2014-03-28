@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DownloaderFragment extends Fragment {
 	private Handler handler = new Handler();
@@ -45,6 +46,7 @@ public class DownloaderFragment extends Fragment {
 				NetworkInfo netInfo = connMgr.getActiveNetworkInfo();
 				if (netInfo == null || !netInfo.isConnected()) {
 					Log.d("mj_tag", "No internet connection");
+					Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
 					downloading = false;
 					downloaded = false;
 					updateUI();
@@ -193,6 +195,9 @@ public class DownloaderFragment extends Fragment {
 		File albumDirectory = getAlbumDirectory();
 		if (!albumDirectory.canRead()) {
 			Log.d("mj_tag", "Can't read from " + albumDirectory.getAbsolutePath());
+			// postToastStringToHandler("Can't read from " +
+			// albumDirectory.getAbsolutePath());
+			Toast.makeText(getActivity(), "Can't read from " + albumDirectory.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 			downloading = false;
 			downloaded = false;
 			updateUI();
@@ -204,6 +209,9 @@ public class DownloaderFragment extends Fragment {
 		File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + picureName);
 		if (!pictureFile.exists()) {
 			Log.d("mj_tag", "Can't find picture at " + pictureFile.getAbsolutePath());
+			// postToastStringToHandler("Can't find picture at " +
+			// pictureFile.getAbsolutePath());
+			Toast.makeText(getActivity(), "Can't find picture at " + pictureFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 			downloading = false;
 			downloaded = false;
 			updateUI();
