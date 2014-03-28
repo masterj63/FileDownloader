@@ -116,12 +116,14 @@ public class DownloaderFragment extends Fragment {
 	private class PictureDownloaderAsyncTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
+			int loaded = 0;
+			int total = 0;
 			String pictureUrl = getString(R.string.url_picture);
 			try {
 				URL url = new URL(pictureUrl);
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				// init
-				conn.setReadTimeout(15000);
+				conn.setReadTimeout(5000);
 				conn.setConnectTimeout(5000);
 				conn.setRequestMethod("GET");
 				conn.setDoInput(true);
@@ -152,8 +154,8 @@ public class DownloaderFragment extends Fragment {
 				File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + pictureName);
 				OutputStream outStream = new FileOutputStream(pictureFile);
 
-				int loaded = 0;
-				int total = conn.getContentLength();
+				loaded = 0;
+				total = conn.getContentLength();
 				int t;
 				while ((t = inStream.read()) != -1) {
 					loaded++;
@@ -174,14 +176,26 @@ public class DownloaderFragment extends Fragment {
 				Log.d("mj_tag", "ProtocolException", e);
 				e.printStackTrace();
 			}
+			if (loaded != total)
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(getActivity(), "downloading error", Toast.LENGTH_SHORT).show();
+						downloading = false;
+						downloaded = false;
+						updateUI();
+					}
+				});
+			else {
+				downloading = false;
+				downloaded = false;
+			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			downloading = false;
-			downloaded = true;
 			updateUI();
 		}
 	}
