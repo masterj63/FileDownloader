@@ -121,6 +121,7 @@ public class DownloaderFragment extends Fragment {
 			int loaded = 0;
 			int total = 0;
 			String pictureUrl = getString(R.string.url_picture);
+			File pictureFile = null;
 			try {
 				URL url = new URL(pictureUrl);
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -153,7 +154,7 @@ public class DownloaderFragment extends Fragment {
 				});
 
 				String pictureName = getString(R.string.name_local_picture);
-				File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + pictureName);
+				pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + pictureName);
 				OutputStream outStream = new FileOutputStream(pictureFile);
 
 				loaded = 0;
@@ -179,14 +180,21 @@ public class DownloaderFragment extends Fragment {
 				Log.d("mj_tag", "ProtocolException", e);
 				e.printStackTrace();
 			}
+
 			if (loaded != total) {
 				toastText("downloading error");
 				downloading = false;
 				downloaded = false;
 			} else {
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_MEDIA_MOUNTED);
+				intent.setData(Uri.fromFile(pictureFile));
+				getActivity().sendBroadcast(intent);
+
 				downloading = false;
 				downloaded = true;
 			}
+
 			return null;
 		}
 
