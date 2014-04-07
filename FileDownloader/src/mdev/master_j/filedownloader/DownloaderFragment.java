@@ -31,6 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class DownloaderFragment extends Fragment {
+	private static final int BUFFER_SIZE_BYTES = 2048;
+
 	private Handler handler = new Handler();
 	private Button actionButton;
 	private TextView statusTextView;
@@ -156,10 +158,11 @@ public class DownloaderFragment extends Fragment {
 
 				loaded = 0;
 				total = conn.getContentLength();
-				int t;
-				while ((t = inStream.read()) != -1) {
-					loaded++;
-					outStream.write(t);
+				byte buffer[] = new byte[BUFFER_SIZE_BYTES];
+				int bytesRead;
+				while ((bytesRead = inStream.read(buffer)) != -1) {
+					loaded += bytesRead;
+					outStream.write(buffer, 0, bytesRead);
 
 					downloadProgressBar.setMax(total);
 					downloadProgressBar.setProgress(loaded);
