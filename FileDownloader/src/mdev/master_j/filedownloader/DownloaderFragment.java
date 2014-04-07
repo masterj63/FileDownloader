@@ -136,7 +136,7 @@ public class DownloaderFragment extends Fragment {
 
 				File albumDirectory = getAlbumDirectory();
 				if (!albumDirectory.mkdirs() && !albumDirectory.exists()) {
-					Log.d("mj_tag", "Cannot access " + albumDirectory.getAbsolutePath());
+					toastText("Cannot access " + albumDirectory.getAbsolutePath());
 					downloading = false;
 					downloaded = false;
 					return null;
@@ -204,8 +204,6 @@ public class DownloaderFragment extends Fragment {
 		File albumDirectory = getAlbumDirectory();
 		if (!albumDirectory.canRead()) {
 			Log.d("mj_tag", "Can't read from " + albumDirectory.getAbsolutePath());
-			// postToastStringToHandler("Can't read from " +
-			// albumDirectory.getAbsolutePath());
 			Toast.makeText(getActivity(), "Can't read from " + albumDirectory.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 			downloading = false;
 			downloaded = false;
@@ -218,8 +216,6 @@ public class DownloaderFragment extends Fragment {
 		File pictureFile = new File(albumDirectory.getAbsolutePath() + "/" + picureName);
 		if (!pictureFile.exists()) {
 			Log.d("mj_tag", "Can't find picture at " + pictureFile.getAbsolutePath());
-			// postToastStringToHandler("Can't find picture at " +
-			// pictureFile.getAbsolutePath());
 			Toast.makeText(getActivity(), "Can't find picture at " + pictureFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 			downloading = false;
 			downloaded = false;
@@ -238,5 +234,14 @@ public class DownloaderFragment extends Fragment {
 	private File getAlbumDirectory() {
 		String albumName = getString(R.string.name_local_album);
 		return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
+	}
+
+	private void toastText(final String text) {
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 }
