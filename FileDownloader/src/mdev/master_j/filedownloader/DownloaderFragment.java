@@ -176,19 +176,13 @@ public class DownloaderFragment extends Fragment {
 				Log.d("mj_tag", "ProtocolException", e);
 				e.printStackTrace();
 			}
-			if (loaded != total)
-				handler.post(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(getActivity(), "downloading error", Toast.LENGTH_SHORT).show();
-						downloading = false;
-						downloaded = false;
-						updateUI();
-					}
-				});
-			else {
+			if (loaded != total) {
+				toastText("downloading error");
 				downloading = false;
 				downloaded = false;
+			} else {
+				downloading = false;
+				downloaded = true;
 			}
 			return null;
 		}
